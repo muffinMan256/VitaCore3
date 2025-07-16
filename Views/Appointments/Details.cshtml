@@ -1,0 +1,22 @@
+﻿@model VitaCore.Models.ViewModel.AppointmentDetailsViewModel
+@{
+    ViewData["Title"] = "Appointment Details";
+}
+@if (Model == null)
+{
+        <p class="text-danger">Model is null!</p>
+}
+
+<div class="container mt-4">
+    <h2>Appointment Details</h2>
+    <div class="card mt-3 shadow-sm">
+        <div class="card-body">
+            <p><strong>Doctor:</strong> @Model.DoctorName</p>
+            <p><strong>Patient:</strong> @Model.PatientName</p>
+            <p><strong>Start Time:</strong> @Model.StartTime.ToString("f")</p>
+            <p><strong>End Time:</strong> @(Model.EndTime?.ToString("f") ?? "Not yet ended")</p>
+            <p><strong>Notes:</strong> @Model.Notes</p>
+            <a asp-action="GetAppointments" class="btn btn-secondary mt-3">Back to Appointments</a>
+        </div>
+    </div>
+</div>

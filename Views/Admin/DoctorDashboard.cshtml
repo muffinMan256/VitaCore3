@@ -1,0 +1,35 @@
+﻿@model IEnumerable<DoctorModel>
+
+<h1>Doctors Management</h1>
+<div class="mb-3">
+    <a asp-controller="Admin" asp-action="Index" asp-route-filter="patients" class="btn btn-secondary">View Patients</a>
+    <a asp-controller="Doctors" asp-action="Create" class="btn btn-primary">Add New Doctor</a>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Specialization</th>
+        <th>Contact</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.id</td>
+            <td>@(item.User?.FirstName + " " + item.User?.LastName)</td>
+            <td>@item.Specialization</td>
+            <td>@item.User?.Email</td>
+            <td>
+                <a asp-action="" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="" asp-route-id="@item.id">Details</a> |
+                <a asp-action="" asp-route-id="@item.id">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

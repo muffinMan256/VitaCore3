@@ -1,0 +1,109 @@
+﻿@{
+    ViewData["Title"] = "About Our Platform";
+}
+
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Ko...==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+    .about-card, .tech-card, .certification-card {
+        background: #ffffff;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+    }
+
+        .about-card:hover,
+        .tech-card:hover,
+        .certification-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .tech-list {
+        list-style: none;
+        padding-left: 0;
+    }
+
+        .tech-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+            .tech-list li:last-child {
+                border-bottom: none;
+            }
+
+    .cert-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: center;
+        margin-top: 1.5rem;
+    }
+
+    .cert-item {
+        background: #f9f9f9;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        text-align: center;
+        width: 150px;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+    }
+
+        .cert-item:hover {
+            transform: scale(1.05);
+            background: #fff;
+        }
+
+        .cert-item span {
+            display: block;
+            margin-top: 0.75rem;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+</style>
+
+<div class="container my-5">
+    <h1 class="display-4 mb-4 text-center">@ViewData["Title"]</h1>
+
+    <div class="about-card mb-5">
+        <h2 class="mb-4"><i class="fas fa-stethoscope me-2 text-primary"></i>Our Mission</h2>
+        <p class="lead text-muted">
+            Transforming patient care through real-time health monitoring and secure
+            medical collaboration.
+        </p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="tech-card h-100">
+                <h3 class="mb-3 text-primary">Core Technologies</h3>
+                <ul class="tech-list">
+                    <li>ASP.NET Core 9</li>
+                    <li>Azure Cloud</li>
+                    <li>BLE 5.0</li>
+                    <li>AI Analytics</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="certification-card h-100">
+                <h3 class="mb-3 text-primary">Certifications</h3>
+                <div class="cert-grid">
+                    <div class="cert-item">
+                        <i class="fas fa-shield-alt fa-3x text-success"></i>
+                        <span>GDPR</span>
+                    </div>
+                    <div class="cert-item">
+                        <i class="fas fa-certificate fa-3x text-warning"></i>
+                        <span>CE Medical</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

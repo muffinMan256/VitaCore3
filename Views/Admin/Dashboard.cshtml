@@ -1,0 +1,128 @@
+﻿@model VitaCore.Models.ViewModel.DashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    var isDoctorView = Model.Doctors != null;
+    var isPatientView = Model.Patients != null;
+}
+
+<section class="admin-dashboard bg-light py-5">
+    <div class="container">
+        <!-- Header -->
+        <div class="admin-dashboard-header d-flex justify-content-between align-items-center mb-4">
+            <h2 class="admin-dashboard-title">Admin Dashboard</h2>
+            <div class="admin-dashboard-filters">
+                <a asp-action="Index" asp-route-filter="doctors" class="btn btn-outline-primary me-2">Doctors</a>
+                <a asp-action="Index" asp-route-filter="patients" class="btn btn-outline-secondary">Patients</a>
+            </div>
+        </div>
+
+        <!-- Analytics Cards -->
+        <div class="row admin-dashboard-cards mb-5">
+            <div class="col-md-3 mb-3">
+                <div class="card text-white bg-primary shadow-sm h-100">
+                    <div class="card-body">
+                        <h6 class="card-title">Total Doctors</h6>
+                        <p class="card-text fs-4">@Model.TotalDoctors</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-white bg-success shadow-sm h-100">
+                    <div class="card-body">
+                        <h6 class="card-title">Total Patients</h6>
+                        <p class="card-text fs-4">@Model.TotalPatients</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-white bg-info shadow-sm h-100">
+                    <div class="card-body">
+                        <h6 class="card-title">Doctor Logins Today</h6>
+                        <p class="card-text fs-4">@Model.DoctorLoginsToday</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-white bg-warning shadow-sm h-100">
+                    <div class="card-body">
+                        <h6 class="card-title">Patient Logins Today</h6>
+                        <p class="card-text fs-4">@Model.PatientLoginsToday</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* <!-- Add Button -->
+        <div class="admin-dashboard-add-btn mb-4">
+            @if (isDoctorView)
+            {
+                <a asp-controller="Doctors" asp-action="Create" class="btn btn-primary">+ Add Doctor</a>
+            }
+            else
+            {
+                <a asp-controller="Patients" asp-action="Create" class="btn btn-success">+ Add Patient</a>
+            }
+        </div> *@
+
+        <!-- Data Table -->
+        <div class="table-responsive admin-dashboard-table">
+            <table class="table table-bordered table-hover shadow-sm">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        @if (isDoctorView)
+                        {
+                            <th>Specialization</th>
+                            <th>Email</th>
+                        }
+                        else if (isPatientView)
+                        {
+                            <th>Age</th>
+                            <th>Email</th>
+                        }
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (isDoctorView)
+                    {
+                        foreach (var item in Model.Doctors)
+                        {
+                            <tr>
+                                <td>@(item.User?.FirstName + " " + item.User?.LastName)</td>
+                                <td>@item.Specialization</td>
+                                <td>@item.User?.Email</td>
+                                <td>
+                                    <a asp-controller="Doctors" asp-action="Edit" asp-route-id="@item.id" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                                    <form asp-controller="Doctors" asp-action="Delete" asp-route-id="@item.id" method="post" class="d-inline" onsubmit="return confirm('Delete this doctor?');">
+                                        @Html.AntiForgeryToken()
+                                        <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else if (isPatientView)
+                    {
+                        foreach (var item in Model.Patients)
+                        {
+                            <tr>
+                                <td>@(item.User?.FirstName + " " + item.User?.LastName)</td>
+                                <td>@item.age</td>
+                                <td>@item.email</td>
+                                <td class="action-buttons">
+                                    <a asp-controller="Patients" asp-action="Edit" asp-route-id="@item.id" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <form asp-controller="Patients" asp-action="Delete" asp-route-id="@item.id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                                    </form>
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,74 @@
+﻿@model VitaCore.Models.PatientModel
+
+@{
+    ViewData["Title"] = "Patient Details";
+}
+
+<h2>Patient Details</h2>
+
+<div class="card p-4 shadow rounded">
+    <h4>Basic Information</h4>
+    <dl class="row">
+      @*   <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9">@Model.id</dd> *@
+
+     @*    <dt class="col-sm-3">User ID</dt>
+        <dd class="col-sm-9">@Model.UserId</dd> *@
+
+        <dt class="col-sm-3">Age</dt>
+        <dd class="col-sm-9">@Model.age</dd>
+
+        <dt class="col-sm-3">CNP</dt>
+        <dd class="col-sm-9">@Model.cnp</dd>
+
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">@Model.email</dd>
+
+        <dt class="col-sm-3">Phone</dt>
+        <dd class="col-sm-9">@Model.phone_number</dd>
+
+        <dt class="col-sm-3">Occupation</dt>
+        <dd class="col-sm-9">@Model.occupation</dd>
+
+        <dt class="col-sm-3">Workplace</dt>
+        <dd class="col-sm-9">@Model.workplace</dd>
+
+        <dt class="col-sm-3">Street</dt>
+        <dd class="col-sm-9">@Model.address_street</dd>
+
+        <dt class="col-sm-3">City</dt>
+        <dd class="col-sm-9">@Model.address_city</dd>
+
+        <dt class="col-sm-3">County</dt>
+        <dd class="col-sm-9">@Model.address_county</dd>
+    </dl>
+
+    @* Optional: Show related data *@
+    @if (Model.MedicalHistories?.Any() == true)
+    {
+        <h4 class="mt-4">Medical History</h4>
+        <ul>
+            @foreach (var history in Model.MedicalHistories)
+            {
+                @* <li>@history.Description</li> *@
+            }
+        </ul>
+    }
+
+    @if (Model.Recommendations?.Any() == true)
+    {
+        <h4 class="mt-4">Recommendations</h4>
+        <ul>
+            @foreach (var rec in Model.Recommendations)
+            {
+                @* <li>@rec.Text</li> *@
+            }
+        </ul>
+    }
+
+    @* Add other related collections similarly if needed *@
+
+    <div class="mt-4">
+        <a asp-action="Index" asp-controller="Doctors" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>

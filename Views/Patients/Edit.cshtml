@@ -1,0 +1,19 @@
+﻿@model VitaCore.Models.PatientModel
+@{
+    ViewData["Title"] = "Edit Patient";
+}
+
+<h2 class="mt-2">Complete your Profile</h2>
+<hr />
+<div class="patient-form">
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="id" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        @Html.Partial("_PatientFormFields", Model)
+
+        <div class="form-group mt-3">
+            <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+    </form>
+</div>

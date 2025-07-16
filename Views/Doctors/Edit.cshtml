@@ -1,0 +1,96 @@
+﻿@model VitaCore.Models.DoctorModel
+@{
+    ViewData["Title"] = "Edit Doctor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mt-4 mb-3">Edit Doctor Profile</h2>
+
+<div class="form-wrapper my-5">
+    <form asp-action="Edit" asp-controller="Doctors" method="post" novalidate>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="id" />
+
+        <div class="form-group mb-3">
+            <label asp-for="honorific_title" class="control-label"></label>
+            <input asp-for="honorific_title" class="form-control" required />
+            <span asp-validation-for="honorific_title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="gender" class="control-label">Gender</label>
+            <select asp-for="gender" class="form-control" required>
+                <option value="">-- Select Gender --</option>
+                <option value="Male" selected="@(Model.gender == "Male")">Male</option>
+                <option value="Female" selected="@(Model.gender == "Female")">Female</option>
+                <option value="Other" selected="@(Model.gender == "Other")">Other</option>
+            </select>
+            <span asp-validation-for="gender" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="bio" class="control-label"></label>
+            <textarea asp-for="bio" class="form-control" required></textarea>
+            <span asp-validation-for="bio" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="availability_hours" class="control-label"></label>
+            <input asp-for="availability_hours" class="form-control" required />
+            <span asp-validation-for="availability_hours" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="clinic_address" class="control-label"></label>
+            <input asp-for="clinic_address" class="form-control" required />
+            <span asp-validation-for="clinic_address" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Specialization" class="control-label">Specialization</label>
+            <select asp-for="Specialization" class="form-control" required>
+                <option value="">-- Select Specialization --</option>
+                <option>Cardiology</option>
+                <option>Dermatology</option>
+                <option>Endocrinology</option>
+                <option>Gastroenterology</option>
+                <option>Neurology</option>
+                <option>Oncology</option>
+                <option>Orthopedics</option>
+                <option>Pediatrics</option>
+                <option>Psychiatry</option>
+                <option>Radiology</option>
+                <option>Urology</option>
+            </select>
+            <span asp-validation-for="Specialization" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="control-label">Mark as Favorite</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" asp-for="is_favorite" value="true" id="favoriteYes" />
+                <label class="form-check-label" for="favoriteYes">Yes</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" asp-for="is_favorite" value="false" id="favoriteNo" />
+                <label class="form-check-label" for="favoriteNo">No</label>
+            </div>
+            <span asp-validation-for="is_favorite" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary btn-sm">Update Doctor</button>
+            <a asp-action="Index" class="btn btn-secondary btn-sm">Cancel</a>
+        </div>
+    </form>
+
+    <hr class="my-4" />
+
+    <form asp-controller="Doctors" asp-action="Delete" asp-route-id="@Model.id" method="post" onsubmit="return confirm('Are you sure you want to delete this doctor?');">
+        <button type="submit" class="btn btn-danger btn-sm">Delete Doctor</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

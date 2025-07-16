@@ -1,0 +1,35 @@
+﻿.patient-form {
+    max-width: 800px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.patient-form .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+}
+
+.patient-form label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.patient-form input {
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+}
+
+.patient-form small {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.patient-form .btn {
+    margin-right: 10px;
+}

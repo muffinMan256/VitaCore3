@@ -1,0 +1,58 @@
+﻿
+@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="hero-modern">
+    <div class="hero-content container">
+        <div class="hero-text">
+            <h1>Empower Your Health with VitaCore</h1>
+            <p>Seamless patient care, intelligent records, and expert consultations — all in one digital platform.</p>
+            <div class="hero-buttons">
+                <a href="/Account/Register" class="btn primary-btn">Get Started</a>
+                <a href="/Home/Features" class="btn secondary-btn">Learn More</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="/images/hero-illustration.svg" alt="Healthcare Technology Illustration">
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <!-- Optional JavaScript for animations or interactivity -->
+}
+
+
+
+
+<!-- Features Section -->
+<section class="container-adaptive py-5">
+    <div class="row text-center g-4">
+        <div class="col-md-4">
+            <div class="medical-card">
+                <i class="fas fa-heartbeat fa-3x mb-3 text-danger"></i>
+                <h4>Real-Time Health Monitoring</h4>
+                <p>Track vital signs such as heart rate, oxygen levels, and sleep patterns in real time using our advanced wearable technology. Gain insights into your well-being anytime, anywhere.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="medical-card">
+                <i class="fas fa-user-md fa-3x mb-3 text-primary"></i>
+                <h4>Direct Medical Connectivity</h4>
+                <p>Stay connected with healthcare professionals through our secure digital ecosystem. Share your health data instantly to enable faster, more informed medical decisions and remote consultations.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="medical-card">
+                <i class="fas fa-lock fa-3x mb-3 text-success"></i>
+                <h4>Advanced Data Security</h4>
+                <p>Your health data is protected with state-of-the-art encryption and stored in full compliance with global privacy standards, including GDPR. Your privacy and safety are our top priorities.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Include this only if not already in layout -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="..." crossorigin="anonymous">

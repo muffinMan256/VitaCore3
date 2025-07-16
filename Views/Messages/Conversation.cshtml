@@ -1,0 +1,45 @@
+﻿@model List<VitaCore.Models.MessageModel>
+@{
+    var currentUserId = (int)ViewBag.CurrentUserId;
+    var withUserId = (int)ViewBag.WithUserId;
+    var withUserName = ViewBag.WithUserName as string;
+    ViewBag.Title = "Conversation";
+}
+<div class="container py-4">
+    <h2 class="mb-4">Conversation with @withUserName</h2>
+
+    <div class="mb-3">
+        <a class="btn btn-outline-secondary btn-sm" href="@Url.Action("Inbox", "Messages")">
+            ← Back to Inbox
+        </a>
+    </div>
+
+    <div class="border rounded shadow-sm p-3 mb-4 bg-light" style="max-height: 500px; overflow-y: auto;">
+        @foreach (var msg in Model)
+        {
+            var isOwnMessage = msg.sender_id == currentUserId;
+            <div class="d-flex mb-3 @(isOwnMessage ? "justify-content-end" : "justify-content-start")">
+                <div class="p-3 rounded-3"
+                     style="max-width: 70%; background-color: @(isOwnMessage ? "#007bff" : "#e9ecef"); color: @(isOwnMessage ? "#fff" : "#000")">
+                    <div class="fw-semibold mb-1">
+                        @(isOwnMessage ? "You" : withUserName)
+                    </div>
+                    <div>@msg.message</div>
+                    <small class="text-muted d-block mt-1 text-end" style="font-size: 0.75rem;">
+                        @msg.sent_at?.ToLocalTime().ToString("g")
+                    </small>
+                </div>
+            </div>
+        }
+    </div>
+
+    <form method="post" asp-action="SendMessage" asp-controller="Messages">
+        <input type="hidden" name="receiver_id" value="@withUserId" />
+        <div class="mb-3">
+            <textarea name="message" class="form-control" rows="3" placeholder="Type your reply..." required></textarea>
+        </div>
+        <div class="d-grid">
+            <button class="btn btn-primary">Send</button>
+        </div>
+    </form>
+</div>

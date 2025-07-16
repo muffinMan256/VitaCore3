@@ -1,0 +1,89 @@
+﻿@model VitaCore.Models.ViewModel.DoctorDashboardViewModel
+@{
+    ViewData["Title"] = "Doctor Dashboard";
+}
+
+<div class="container my-4">
+    <h2 class="mb-4 text-center">Welcome, Dr. @Model.FullName</h2>
+
+    <!-- Today's Appointments -->
+    <div class="mb-5">
+        <h4 class="mb-3">Today's Appointments</h4>
+        @if (Model.TodaysAppointments?.Any() == true)
+        {
+            <div class="list-group">
+                @foreach (var appt in Model.TodaysAppointments)
+                {
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>@appt.PatientName</strong><br />
+                            <small>@appt.StartTime.ToString("hh:mm tt") - @appt.EndTime.ToString("hh:mm tt")</small><br />
+                            <small class="text-muted">@appt.Notes</small>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">No appointments for today.</div>
+        }
+    </div>
+
+    <!-- My Patients -->
+    <div class="mb-5">
+        <h4 class="mb-3">My Patients</h4>
+        @if (Model.Patients?.Any() == true)
+        {
+            <div class="row row-cols-1 row-cols-md-2 g-3">
+                @foreach (var patient in Model.Patients)
+                {
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">@patient.FullName</h5>
+                                <p class="card-text">
+                                    Last Visit: @patient.LastVisit?.ToString("MMM dd, yyyy") <br />
+                                    Status: <span class="badge bg-secondary">@patient.Status</span>
+                                </p>
+                                <a asp-controller="Patients" asp-action="Details" asp-route-id="@patient.Id" class="btn btn-sm btn-outline-success">View Patient Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">No patients assigned.</p>
+        }
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row text-center">
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Appointments This Week</h6>
+                    <h3>@Model.Stats.WeeklyAppointments</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Patients</h6>
+                    <h3>@Model.Stats.TotalPatients</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Messages</h6>
+                    <h3>@Model.Stats.UnreadMessages</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,147 @@
+﻿@model VitaCore.Models.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<style>
+    :root {
+        --primary: #0d6efd;
+        --secondary: #6610f2;
+        --transition: all 0.3s ease-in-out;
+    }
+
+    body {
+        background: #f5f8fa;
+    }
+
+    .wrapper {
+        max-width: 500px;
+        margin: 4rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 1.5rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        font-family: 'Segoe UI', sans-serif;
+        color: #000; /* Ensure black text */
+    }
+
+    .form-toggle {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #eee;
+    }
+
+        .form-toggle span {
+            padding: 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--primary);
+            opacity: 0.7;
+            position: relative;
+            transition: var(--transition);
+        }
+
+            .form-toggle span.active-tab {
+                opacity: 1;
+                font-weight: 600;
+            }
+
+                .form-toggle span.active-tab::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -2px;
+                    left: 0;
+                    width: 100%;
+                    height: 3px;
+                    background: var(--secondary);
+                    border-radius: 2px;
+                }
+
+    .form {
+        display: none;
+        animation: fadeIn 0.4s ease;
+    }
+
+        .form.active {
+            display: block;
+        }
+
+    .form-floating input {
+        color: #000; /* Form input text black */
+    }
+
+    .form-floating label {
+        color: #555;
+    }
+
+    .form-check-label {
+        color: #000;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        border: none;
+        transition: var(--transition);
+    }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+        }
+
+</style>
+
+
+   
+<div class="wrapper">
+    <h2 class="text-center mb-3">Register</h2>
+    <div @* class="form login @(Model.IsRegister ? "active" : "")" *@>
+        <form asp-action="Register" asp-controller="Account" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="Email" class="form-control" aria-required="true" placeholder="Email"/>
+                <label asp-for="Email"> Enter your Email</label>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="UserName" class="form-control" autocomplete="username" aria-required="true" placeholder="Username"/>
+                <label asp-for="UserName"> Enter your Username</label>
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Password"/>
+                <label asp-for="Password"> Enter your Password</label>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="PasswordConfirmation" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Confirm Password"/>
+                <label asp-for="PasswordConfirmation">Confirm your Password</label>
+                <span asp-validation-for="PasswordConfirmation" class="text-danger"></span>
+            </div>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginForm = document.querySelector(".form.signup");
+            const registerForm = document.querySelector(".form.login");
+            const loginToggle = document.querySelector(".login-toggle");
+            const signupToggle = document.querySelector(".signup-toggle");
+
+            function showForm(form) {
+                document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
+                form.classList.add('active');
+
+                const isRegister = form === registerForm;
+                loginToggle.classList.toggle('active-tab', isRegister);
+                signupToggle.classList.toggle('active-tab', !isRegister);
+            }
+            loginToggle.addEventListener('click', () => showForm(registerForm));
+            signupToggle.addEventListener('click', () => showForm(loginForm));
+        });
+    </script>
+}

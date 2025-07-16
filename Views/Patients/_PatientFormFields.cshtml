@@ -1,0 +1,79 @@
+﻿@model VitaCore.Models.PatientModel
+
+<div class="container patient-form">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="age">Age</label>
+            <input asp-for="age" class="form-control" type="number" min="0" max="120"
+                   inputmode="numeric"
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                   required />
+            <span asp-validation-for="age" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="cnp">CNP</label>
+            <input asp-for="cnp" class="form-control" type="text"
+                   inputmode="numeric"
+                   pattern="\d{13}" maxlength="13" minlength="13"
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                   required />
+            <small class="form-text text-muted">Must be exactly 13 digits.</small>
+            <span asp-validation-for="cnp" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="address_street">Street</label>
+            <input asp-for="address_street" class="form-control" type="text" required />
+            <span asp-validation-for="address_street" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label asp-for="address_city">City</label>
+            <input asp-for="address_city" class="form-control" type="text" required />
+            <span asp-validation-for="address_city" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label asp-for="address_county">County</label>
+            <input asp-for="address_county" class="form-control" type="text" required />
+            <span asp-validation-for="address_county" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="phone_number">Phone Number</label>
+            <input id="phone_number" name="phone_number" type="text"
+                   class="form-control"
+                   inputmode="numeric"
+                   pattern="\d+"
+                   required
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+            <small class="form-text text-muted">Digits only. No spaces or symbols.</small>
+            <span asp-validation-for="phone_number" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="email">E-Mail</label>
+            <input asp-for="email" class="form-control" type="email" required />
+            <span asp-validation-for="email" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="occupation">Occupation</label>
+            <input asp-for="occupation" class="form-control" type="text" required />
+            <span asp-validation-for="occupation" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="workplace">Workplace</label>
+            <input asp-for="workplace" class="form-control" type="text" required />
+            <span asp-validation-for="workplace" class="text-danger"></span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,188 @@
+﻿@model ContactFormModel
+@{
+    ViewData["Title"] = "System Features";
+}
+
+<div class="container my-5">
+    <h1 class="display-4 mb-4 text-center text-primary">@ViewData["Title"]</h1>
+
+    <div class="row g-4">
+        <!-- Wearable Device Card -->
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card shadow-hover">
+                <div class="feature-icon bg-primary-gradient">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h3 class="mb-3">Wearable Device</h3>
+                <ul class="feature-list">
+                    <li>Real-time ECG Monitoring</li>
+                    <li>Blood Oxygen Tracking</li>
+                    <li>24h Battery Life</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Patient App Card -->
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card shadow-hover">
+                <div class="feature-icon bg-warning-gradient">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3 class="mb-3">Patient App</h3>
+                <ul class="feature-list">
+                    <li>Health Dashboard</li>
+                    <li>Custom Alerts</li>
+                    <li>Emergency SOS</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Doctor Portal Card -->
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card shadow-hover">
+                <div class="feature-icon bg-danger-gradient">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <h3 class="mb-3">Doctor Portal</h3>
+                <ul class="feature-list">
+                    <li>Patient Monitoring</li>
+                    <li>ECG Analysis</li>
+                    <li>Secure Messaging</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-form mt-5">
+        <div class="card border-0 shadow">
+            <div class="card-body p-4">
+                <h3 class="mb-4 text-center">Contact Medical Team</h3>
+                <form asp-action="" method="post">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input asp-for="Name" class="form-control" placeholder="Full Name" required>
+                                <label asp-for="Name">Full Name</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input asp-for="Email" type="email" class="form-control" placeholder="Email" required>
+                                <label asp-for="Email">Email Address</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <textarea asp-for="Message" class="form-control" placeholder="Your Message"
+                                          style="height: 120px" required></textarea>
+                                <label asp-for="Message">Your Message</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select class="form-select" id="urgency" required>
+                                    <option value="">Select Urgency</option>
+                                    <option>Routine Inquiry</option>
+                                    <option>Technical Support</option>
+                                    <option>Medical Emergency</option>
+                                </select>
+                                <label for="urgency">Urgency Level</label>
+                            </div>
+                        </div>
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <i class="fas fa-paper-plane me-2"></i>Send Message
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary: #1a237e;
+        --secondary: #00695c;
+        --accent: #d32f2f;
+        --light: #f8f9fa;
+    }
+
+    .feature-card {
+        padding: 2rem;
+        background: white;
+        border-radius: 1rem;
+        transition: all 0.3s ease;
+        height: 100%;
+        border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .shadow-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        transition: transform 0.3s ease;
+    }
+
+    .bg-primary-gradient {
+        background: linear-gradient(45deg, var(--primary), #0d47a1);
+    }
+
+    .bg-warning-gradient {
+        background: linear-gradient(45deg, #ff9800, #f57c00);
+    }
+
+    .bg-danger-gradient {
+        background: linear-gradient(45deg, var(--accent), #b71c1c);
+    }
+
+    .feature-list {
+        list-style: none;
+        padding: 0;
+        text-align: left;
+    }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+    .contact-form .form-control {
+        border: 2px solid #e0e0e0;
+        transition: border-color 0.3s ease;
+    }
+
+        .contact-form .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+        }
+
+    @@media (max-width: 768px) {
+        .feature-card {
+            padding: 1.5rem;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+        }
+
+        .display-4 {
+            font-size: 2.5rem;
+        }
+    }
+</style>

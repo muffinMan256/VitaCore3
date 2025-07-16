@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Privacy Policy";
+}
+
+<div class="container my-5">
+    <h1 class="display-4 mb-4">@ViewData["Title"] & GDPR Compliance</h1>
+
+    <div class="gdpr-grid">
+        <!-- Data Protection Card -->
+        <div class="compliance-card medical-card">
+            <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-shield-alt fa-2x text-primary me-3"></i>
+                <h3 class="mb-0">Data Protection</h3>
+            </div>
+            <ul class="compliance-list list-unstyled">
+                <li class="d-flex align-items-center">
+                    <i class="fas fa-lock text-success me-2"></i>
+                    End-to-end encryption for all data
+                </li>
+                <li class="d-flex align-items-center">
+                    <i class="fas fa-user-shield text-info me-2"></i>
+                    Role-based access control
+                </li>
+                <li class="d-flex align-items-center">
+                    <i class="fas fa-search text-warning me-2"></i>
+                    Regular security audits
+                </li>
+            </ul>
+        </div>
+
+        <!-- Patient Rights Card -->
+        <div class="compliance-card medical-card">
+            <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-user-check fa-2x text-success me-3"></i>
+                <h3 class="mb-0">Patient Rights</h3>
+            </div>
+            <ul class="compliance-list list-unstyled">
+                <li class="d-flex align-items-center">
+                    <i class="fas fa-database text-primary me-2"></i>
+                    Data access & portability
+                </li>
+                <li class="d-flex align-items-center">
+                    <i class="fas fa-edit text-info me-2"></i>
+                    Request corrections
+                </li>
+                <li class="d-flex align-items-center">
+                    <i class="fas fa-trash-alt text-danger me-2"></i>
+                    Account deletion
+                </li>
+            </ul>
+        </div>
+
+        <!-- Data Collection Card -->
+        <div class="compliance-card medical-card">
+            <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-database fa-2x text-info me-3"></i>
+                <h3 class="mb-0">Data Collection</h3>
+            </div>
+            <ul class="compliance-list list-unstyled">
+                <li class="d-flex align-items-center">
+                    <i class="fas fa-heartbeat text-danger me-2"></i>
+                    Physiological metrics
+                </li>
+                <li class="d-flex align-items-center">
+                    <i class="fas fa-watch-fitness text-success me-2"></i>
+                    Device usage patterns
+                </li>
+                <li class="d-flex align-items-center">
+                    <i class="fas fa-phone-alt text-warning me-2"></i>
+                    Emergency contacts
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+    .gdpr-grid {
+        display: grid;
+        gap: 2rem;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .compliance-card {
+        padding: 2rem;
+        background: white;
+        border-radius: 1rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .compliance-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+    .compliance-list li {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: var(--light);
+        border-radius: 0.75rem;
+        transition: background 0.3s ease;
+    }
+
+        .compliance-list li:hover {
+            background: #f8f9fa;
+        }
+
+    .medical-card {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    @@media (max-width: 768px) {
+        .gdpr-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .compliance-card {
+            padding: 1.5rem;
+        }
+    }
+</style>

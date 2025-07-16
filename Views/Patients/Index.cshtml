@@ -1,0 +1,480 @@
+﻿@model VitaCore.Models.ViewModel.PatientDashboardViewModel
+@{
+    ViewData["Title"] = "Patient Dashboard";
+}
+
+<style>
+    #map {
+        height: 400px;
+    }
+
+    .fc-event {
+        cursor: pointer;
+    }
+
+    .external-event {
+        cursor: move;
+        margin-bottom: 10px;
+        padding: 8px;
+        border-radius: 4px;
+    }
+</style>
+
+<div class="container my-4">
+    <h2 class="mb-4 text-center">Welcome to Your Health Dashboard, @Model.FullName</h2>
+    <form method="get" asp-action="Index" class="mb-3 d-flex gap-2 align-items-start flex-wrap">
+        <input type="text" name="specialization" class="form-control form-control-sm w-auto"
+               placeholder="Search by specialization..."
+               value="@Model.SpecializationFilter" />
+        <button type="submit" class="btn btn-sm btn-primary">Filter</button>
+    </form>
+
+    @* @foreach (var doctor in Model.Doctors)
+    {
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">@doctor.FullName</h5>
+                <p class="card-text">
+                    <strong>Specialization:</strong> @doctor.Specialization
+                </p>
+            </div>
+        </div>
+    } *@
+    <!-- Doctors Section -->
+    <div class="mb-5">
+        <h4 class="mb-3">Your Doctors</h4>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var doctor in Model.Doctors)
+            {
+                var collapseId = $"collapseDoctor{doctor.id}";
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <img src="~/images/medical-team.png"
+                             class="card-img-top"
+                             alt="Doctor Image"
+                             style="height: 140px; object-fit: cover;" />
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@doctor.honorific_title @doctor.FullName</h5>
+                            <p class="card-text small text-muted">@doctor.Specialization</p>
+                            <p class="mb-1 text-secondary">
+                                <i class="fas fa-clinic-medical me-1 text-primary"></i> @doctor.clinic_address
+                            </p>
+                            <p class="mb-3 text-secondary">
+                                <i class="fas fa-clock me-1 text-info"></i> @doctor.availability_hours
+                            </p>
+
+                            <div class="d-flex flex-column gap-2 mt-auto">
+                                <a class="btn btn-outline-secondary btn-sm py-1 px-2"
+                                   data-bs-toggle="collapse"
+                                   href="#@collapseId"
+                                   role="button"
+                                   aria-expanded="false"
+                                   aria-controls="@collapseId">
+                                    <i class="fas fa-user"></i> Profile
+                                </a>
+
+                                <a asp-controller="Messages"
+                                   asp-action="Conversation"
+                                   asp-route-withUserId="@doctor.id"
+                                   class="btn btn-success btn-sm py-1 px-2">
+                                    <i class="fas fa-comment"></i> Message
+                                </a>
+
+                                <button type="button"
+                                        class="btn btn-primary btn-sm py-1 px-2"
+                                        onclick="openAppointmentModal(@doctor.id, '@doctor.LastName')">
+                                    <i class="fas fa-calendar-plus"></i> Create Appointment
+                                </button>
+                            </div>
+
+                            <div class="collapse mt-3" id="@collapseId">
+                                <div class="card card-body bg-light small">
+                                    @if (!string.IsNullOrWhiteSpace(doctor.bio))
+                                    {
+                                        <p><strong>Bio:</strong> @doctor.bio</p>
+                                    }
+                                    <p><strong>Name:</strong> @doctor.FullName</p>
+                                    <p><strong>Gender:</strong> @doctor.gender</p>
+                                    <p><strong>Specialization:</strong> @doctor.Specialization</p>
+                                    <p><strong>Clinic:</strong> @doctor.clinic_address</p>
+                                    <p><strong>Available:</strong> @doctor.availability_hours</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <!-- Pagination Controls -->
+    <nav aria-label="Doctor Pagination">
+        <ul class="pagination">
+            @for (int i = 1; i <= Math.Ceiling((double)Model.Pagination.TotalItems / Model.Pagination.PageSize); i++)
+            {
+                <li class="page-item @(i == Model.Pagination.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-specialization="@Model.SpecializationFilter"
+                       asp-route-pageNumber="@i">
+                        @i
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+
+
+
+
+   <!-- Appointments Section -->
+<div class="mb-5">
+    @* <h4 class="mb-3">Your Upcoming Appointments</h4> *@
+    <div id="external-events" class="mb-4">
+        @if (Model.Appointments?.Any() == true)
+        {
+            foreach (var appt in Model.Appointments)
+            {
+                // Check for null Doctor and handle it
+                var doctorName = appt.Doctor != null ? $"Dr. {appt.Doctor.LastName}" : "Your Doctor";
+                
+                var startTime = appt.StartTime;
+                
+                <div class="external-event fc-event bg-primary text-white p-2 rounded mb-2"
+                     data-id="@appt.Id"
+                     data-title="Appointment with @doctorName"
+                     data-start="@startTime.ToString("yyyy-MM-ddTHH:mm:ss")">
+                    <strong>@doctorName</strong><br />
+                    <small>@startTime.ToString("MMM dd, yyyy hh:mm tt")</small>
+                </div>
+            }
+        }
+        @* else
+        {
+            <div class="alert alert-info">No upcoming appointments</div>
+        } *@
+    </div>
+</div>
+
+    <!-- Calendar and Activities Section -->
+    <div class="row mb-5">
+        <div class="col-md-8">
+            <h4 class="mb-3">Calendar</h4>
+            <div id="calendar" class="bg-light border rounded p-3 mb-4" style="min-height: 500px;"></div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Physical Activity -->
+            <div class="mb-4">
+                <h4 class="mb-3">Physical Activity</h4>
+                @if (Model.PhysicalActivities?.Any() == true)
+                {
+                    foreach (var activity in Model.PhysicalActivities)
+                    {
+                        <div class="card shadow-sm mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">@activity.ActivityType</h5>
+                                <p class="card-text">
+                                    <strong>Time:</strong> @activity.StartTime?.ToShortTimeString() - @activity.EndTime?.ToShortTimeString()<br />
+                                    <strong>Duration:</strong> @activity.Duration mins
+                                </p>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="card">
+                        <div class="card-body text-muted">No recorded activities</div>
+                    </div>
+                }
+            </div>
+
+            <!-- Recommendations -->
+            <div>
+                <h4 class="mb-3">Recommendations</h4>
+                @if (Model.Recommendations?.Any() == true)
+                {
+                    foreach (var rec in Model.Recommendations)
+                    {
+                        <div class="card shadow-sm mb-3 border-info">
+                            <div class="card-body">
+                                <h5 class="card-title">@rec.RecommendationType</h5>
+                                <p class="card-text">
+                                    <strong>Daily Duration:</strong> @rec.DailyDuration mins/day<br />
+                                    <em>@rec.AdditionalInstructions</em>
+                                </p>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="card">
+                        <div class="card-body text-muted">No recommendations yet</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Location Section -->
+    <div class="mb-5">
+        <h4 class="mb-3">Your Location</h4>
+        <div class="text-center mb-3">
+            <button class="btn btn-primary" id="getLocationBtn">
+                <i class="fas fa-map-marker-alt"></i> Show My Current Location
+            </button>
+        </div>
+        <div class="rounded shadow" id="map-container">
+            <div id="map"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Appointment Modal -->
+<div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="appointmentForm">
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="appointmentModalLabel">Create Appointment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="appointmentDoctorId" name="DoctorId" />
+                    <div class="mb-3">
+                        <label class="form-label">Doctor</label>
+                        <input type="text" class="form-control" id="appointmentDoctorName" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="appointmentDate" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="appointmentDate" name="Date" required min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="appointmentTime" class="form-label">Time</label>
+                        <input type="time" class="form-control" id="appointmentTime" name="Time" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="appointmentNotes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="appointmentNotes" name="Notes" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Appointment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- View Appointment Modal -->
+<div class="modal fade" id="viewAppointmentModal" tabindex="-1" aria-labelledby="viewAppointmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewAppointmentModalLabel">Appointment Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="appointmentDetails">
+                <!-- Dynamic content -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+    <script>
+        // Initialize Calendar
+        document.addEventListener('DOMContentLoaded', function() {
+            new FullCalendar.Draggable(document.getElementById('external-events'), {
+                itemSelector: '.external-event',
+                eventData: function(eventEl) {
+                    return {
+                        title: eventEl.dataset.title,
+                        start: eventEl.dataset.start,
+                        id: eventEl.dataset.id
+                    };
+                }
+            });
+
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                height: 700,
+                scrollTime: '08:00:00',
+                slotMinTime: '06:00:00',
+                slotMaxTime: '22:00:00',
+                themeSystem: 'bootstrap5',
+                editable: true,
+                droppable: true,
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                },
+                events: '/Appointments/GetAppointments',
+                eventClick: function(info) {
+                    showAppointmentDetails(info.event);
+                },
+                eventDrop: function(info) {
+                    updateAppointmentTime(info.event.id, info.event.start);
+                },
+                drop: function(info) {
+                    updateAppointmentTime(info.draggedEl.dataset.id, info.date);
+                }
+            });
+
+            calendar.render();
+            window.calendar = calendar;
+        });
+
+        // Create Appointment Functions
+        function openAppointmentModal(doctorId, lastName) {
+            document.getElementById('appointmentDoctorId').value = doctorId;
+            document.getElementById('appointmentDoctorName').value = "Dr. " + lastName;
+
+            // Set minimum date as today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('appointmentDate').min = today;
+
+            // Reset form
+            document.getElementById('appointmentForm').reset();
+
+            // Show modal
+            new bootstrap.Modal(document.getElementById('appointmentModal')).show();
+        }
+
+        document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = {
+                DoctorId: document.getElementById('appointmentDoctorId').value,
+                Date: document.getElementById('appointmentDate').value,
+                Time: document.getElementById('appointmentTime').value,
+                Notes: document.getElementById('appointmentNotes').value
+            };
+
+            fetch('/Appointments/CreateAjax', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    bootstrap.Modal.getInstance(document.getElementById('appointmentModal')).hide();
+                    showToast('Appointment created successfully!', 'success');
+
+                    // Refresh calendar and appointments list
+                    if (window.calendar) {
+                        calendar.refetchEvents();
+                    }
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showToast('Failed to create appointment', 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred', 'danger');
+            });
+        });
+
+        // Appointment View/Update Functions
+        function showAppointmentDetails(event) {
+            const start = event.start ? event.start.toLocaleString() : 'N/A';
+            const end = event.end ? event.end.toLocaleString() : 'N/A';
+
+            document.getElementById('appointmentDetails').innerHTML = `
+                <p><strong>Title:</strong> ${event.title}</p>
+                <p><strong>Start:</strong> ${start}</p>
+                <p><strong>End:</strong> ${end}</p>
+                <p><strong>Status:</strong> ${event.extendedProps.status || 'Scheduled'}</p>
+                <p><strong>Notes:</strong> ${event.extendedProps.notes || 'None'}</p>
+            `;
+
+            new bootstrap.Modal(document.getElementById('viewAppointmentModal')).show();
+        }
+
+        function updateAppointmentTime(appointmentId, newStart) {
+            fetch(`/Appointments/UpdateTime?id=${appointmentId}&newStart=${newStart.toISOString()}`, {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    showToast('Appointment updated!', 'success');
+                } else {
+                    showToast('Failed to update appointment', 'danger');
+                }
+            });
+        }
+
+        // Location Functions
+        function initMap() {
+            const defaultLat = @(Model.Latitude?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "45.9432");
+            const defaultLon = @(Model.Longitude?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "24.9668");
+
+            const map = L.map('map').setView([defaultLat, defaultLon], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            const marker = L.marker([defaultLat, defaultLon]).addTo(map)
+                .bindPopup('Your last known location').openPopup();
+
+            document.getElementById('getLocationBtn').addEventListener('click', function() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(position => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+
+                        map.setView([lat, lng], 15);
+                        marker.setLatLng([lat, lng])
+                            .bindPopup('Your current location')
+                            .openPopup();
+                    }, error => {
+                        console.error('Geolocation error:', error);
+                        showToast('Could not get your location: ' + error.message, 'danger');
+                    });
+                } else {
+                    showToast('Geolocation is not supported by your browser', 'warning');
+                }
+            });
+        }
+
+        // Helper Functions
+        function showToast(message, type) {
+            const toast = `<div class="toast align-items-center text-white bg-${type} border-0 position-fixed bottom-0 end-0 m-3" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">${message}</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>`;
+
+            $('body').append(toast);
+            $('.toast').toast({ delay: 3000 }).toast('show');
+
+            setTimeout(() => $('.toast').remove(), 3000);
+        }
+
+        // Initialize map after DOM loads
+        window.addEventListener('load', initMap);
+    </script>
+}

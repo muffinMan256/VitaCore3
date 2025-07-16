@@ -1,0 +1,41 @@
+﻿@model List<VitaCore.Models.ViewModel.MessageViewModel>
+@{
+    var currentUserId = (int)ViewBag.CurrentUserId;
+    ViewBag.Title = "Inbox";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4 mt-3">Inbox</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">No messages yet.</div>
+    }
+    else
+    {
+        <ul class="list-group shadow-sm">
+            @foreach (var msg in Model)
+            {
+                var otherUserId = msg.SenderId == currentUserId ? msg.ReceiverId : msg.SenderId;
+                var otherUserName = msg.SenderId == currentUserId ? msg.ReceiverName : msg.SenderName;
+                var isUnread = (msg.IsRead == false) && msg.ReceiverId == currentUserId;
+
+                <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="@Url.Action("Conversation", "Messages", new { withUserId = otherUserId })" class="text-decoration-none text-dark fw-semibold">
+                            @otherUserName
+                        </a>
+                        <div class="text-muted small">
+                            @(msg.Message.Length > 60 ? msg.Message.Substring(0, 60) + "..." : msg.Message)
+                        </div>
+                    </div>
+
+                    @if (isUnread)
+                    {
+                        <span class="badge bg-danger">New</span>
+                    }
+                </li>
+            }
+        </ul>
+    }
+</div>
